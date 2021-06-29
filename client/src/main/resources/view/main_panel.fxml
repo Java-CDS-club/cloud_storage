@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.geekbrains_oskin_di.controller.MainController">
+    <children>
+        <MenuBar prefHeight="25.0" prefWidth="1012.0">
+            <menus>
+                <Menu mnemonicParsing="false" text="Главная">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#btnChangeUserAction" text="Смена пользователя" />
+                        <MenuItem mnemonicParsing="false" onAction="#btnExitAction" text="Выход" />
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <HBox layoutY="25.0" prefHeight="523.0" prefWidth="1012.0">
+            <children>
+                <VBox fx:id="panelPC" prefHeight="523.0" prefWidth="475.0">
+                    <children>
+                        <HBox prefHeight="25.0" prefWidth="475.0">
+                            <children>
+                                <ComboBox fx:id="disksBox" onAction="#selectDiskAction" prefHeight="35.0" prefWidth="60.0" />
+                                <TextField fx:id="pathField" prefHeight="25.0" prefWidth="360.0" />
+                                <Button mnemonicParsing="false" onAction="#btnPathUpAction" prefHeight="25.0" prefWidth="65.0" text="Вверх" />
+                            </children>
+                        </HBox>
+                        <TableView fx:id="tablePC" prefHeight="500.0" prefWidth="475.0" VBox.vgrow="ALWAYS">
+                            <cursor>
+                                <Cursor fx:constant="OPEN_HAND" />
+                            </cursor>
+                        </TableView>
+                    </children>
+                </VBox>
+                <VBox alignment="CENTER" prefHeight="523.0" prefWidth="62.0">
+                    <children>
+                        <Button alignment="TOP_LEFT" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="&lt;">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                            <VBox.margin>
+                                <Insets bottom="20.0" />
+                            </VBox.margin>
+                        </Button>
+                        <Button alignment="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="&gt;" textAlignment="CENTER">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Button>
+                    </children>
+                </VBox>
+                <VBox fx:id="panelCloud" prefHeight="523.0" prefWidth="475.0">
+                    <children>
+                        <HBox prefHeight="25.0" prefWidth="475.0">
+                            <children>
+                                <ComboBox prefHeight="35.0" prefWidth="60.0" />
+                                <TextField prefHeight="25.0" prefWidth="360.0" />
+                                <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Вверх" />
+                            </children>
+                        </HBox>
+                        <TableView fx:id="tableCloud" prefHeight="500.0" prefWidth="475.0">
+                            <cursor>
+                                <Cursor fx:constant="OPEN_HAND" />
+                            </cursor>
+                        </TableView>
+                    </children>
+                </VBox>
+            </children>
+        </HBox>
+        <HBox alignment="CENTER" layoutX="1.0" layoutY="549.0" prefHeight="51.0" prefWidth="1012.0">
+            <children>
+                <Button focusTraversable="false" mnemonicParsing="false" onAction="#btnCopyAction" prefHeight="35.0" prefWidth="200.0" text="Копировать файл" textAlignment="CENTER">
+                    <HBox.margin>
+                        <Insets left="20.0" right="20.0" />
+                    </HBox.margin>
+                </Button>
+                <Button focusTraversable="false" layoutX="416.0" layoutY="18.0" mnemonicParsing="false" onAction="#btnMoveAction" prefHeight="35.0" prefWidth="200.0" text="Переместить файл" textAlignment="CENTER">
+                    <HBox.margin>
+                        <Insets left="20.0" right="20.0" />
+                    </HBox.margin>
+                </Button>
+                <Button focusTraversable="false" layoutX="316.0" layoutY="18.0" mnemonicParsing="false" onAction="#btnDeleteAction" prefHeight="35.0" prefWidth="200.0" text="Удалить файл" textAlignment="CENTER">
+                    <HBox.margin>
+                        <Insets left="20.0" right="20.0" />
+                    </HBox.margin>
+                </Button>
+                <Button focusTraversable="false" layoutX="216.0" layoutY="18.0" mnemonicParsing="false" onAction="#btnExitAction" prefHeight="35.0" prefWidth="200.0" text="Выход из программы" textAlignment="CENTER">
+                    <HBox.margin>
+                        <Insets left="20.0" right="20.0" />
+                    </HBox.margin>
+                </Button>
+            </children>
+        </HBox>
+    </children>
+</AnchorPane>

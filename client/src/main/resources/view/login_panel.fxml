@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="anchorPane" prefHeight="318.0" prefWidth="608.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.geekbrains_oskin_di.controller.LoginController">
+   <children>
+      <VBox layoutX="67.0" layoutY="85.0" prefHeight="75.0" prefWidth="338.0">
+         <children>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="177.0" text="login :     " textAlignment="RIGHT" />
+                  <TextField fx:id="loginField" prefHeight="25.0" prefWidth="122.0" />
+               </children>
+            </HBox>
+            <HBox layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="177.0" text="password :     " textAlignment="RIGHT" />
+                  <PasswordField fx:id="passField" prefHeight="25.0" prefWidth="124.0" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <Button fx:id="entrance" layoutX="156.0" layoutY="175.0" mnemonicParsing="false" onAction="#btnEntrance" prefHeight="25.0" prefWidth="122.0" text="Войти" />
+      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="75.0" prefWidth="608.0" text="Добро пожаловать в CLOUD STORRAGE" textAlignment="RIGHT" wrapText="true">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Button fx:id="registration" layoutX="319.0" layoutY="175.0" mnemonicParsing="false" onAction="#btnRegistration" prefHeight="25.0" prefWidth="122.0" text="Регистрация" />
+      <Label fx:id="statusLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="157.0" layoutY="221.0" prefHeight="49.0" prefWidth="285.0" textAlignment="CENTER" />
+   </children>
+</AnchorPane>
