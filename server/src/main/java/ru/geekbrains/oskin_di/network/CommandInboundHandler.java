@@ -5,9 +5,9 @@ import io.netty.channel.ChannelHandlerContext;
 
 import io.netty.channel.SimpleChannelInboundHandler;
 import ru.geekbrains.oskin_di.database.AuthenticationProvided;
-import ru.geekbrains_oskin_di.Command;
-import ru.geekbrains_oskin_di.FileInfo;
-import ru.geekbrains_oskin_di.TypeCommand;
+import ru.geekbrains.oskin_di.command.Command;
+import ru.geekbrains.oskin_di.FileInfo;
+import ru.geekbrains.oskin_di.command.TypeCommand;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

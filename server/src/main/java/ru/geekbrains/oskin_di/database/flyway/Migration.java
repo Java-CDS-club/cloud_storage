@@ -1,13 +1,13 @@
 package ru.geekbrains.oskin_di.database.flyway;
 
 import org.flywaydb.core.Flyway;
+import ru.geekbrains.oskin_di.util.Config;
 
 public class Migration {
 
-    public static void startMigration(){
-
+    public static void start(){
         Flyway flyway = Flyway.configure()
-                .dataSource("jdbc:postgresql://localhost:5435/cloud","postgres","postgrespass")
+                .dataSource(Config.getDb_url(),Config.getDb_login(),Config.getDb_password())
                 .load();
         flyway.migrate();
     }

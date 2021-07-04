@@ -1,5 +1,8 @@
 package ru.geekbrains.oskin_di.database;
 
+import ru.geekbrains.oskin_di.factory.Factory;
+import ru.geekbrains.oskin_di.util.Config;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -7,9 +10,9 @@ import java.sql.Statement;
 
 public class DBConnection {
 
-    private static final String DB_URL = "jdbc:postgresql://localhost:5435/cloud";
-    private static final String USER = "postgres";
-    private static final String PASSWORD = "postgrespass";
+    private static final String DB_URL = Config.getDb_url();
+    private static final String USER = Config.getDb_login();
+    private static final String PASSWORD = Config.getDb_password();
 
     private Connection connection;
     private Statement stmt;
@@ -20,7 +23,7 @@ public class DBConnection {
 
     public DBConnection() {
         try {
-            Class.forName("org.postgresql.Driver");
+            Class.forName(Config.getDb_driver());
             this.connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
             this.stmt = connection.createStatement();
             System.out.println("Успешно подключены к БД");

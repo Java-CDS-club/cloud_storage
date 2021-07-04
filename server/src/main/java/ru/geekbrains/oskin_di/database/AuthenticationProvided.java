@@ -4,7 +4,6 @@ import java.util.Optional;
 
 public interface AuthenticationProvided {
 
-
         void init();
 
         boolean isCorrect(String login, String password);

@@ -1,5 +1,6 @@
 package ru.geekbrains.oskin_di.database.impl;
 
+import ru.geekbrains.oskin_di.core.NettyServer;
 import ru.geekbrains.oskin_di.database.AuthenticationProvided;
 import ru.geekbrains.oskin_di.database.DBConnection;
 
@@ -10,6 +11,14 @@ import java.sql.SQLException;
 public class DBAuthenticationProvided implements AuthenticationProvided {
 
     private DBConnection dbConnection;
+    private static DBAuthenticationProvided instance;
+
+    public static DBAuthenticationProvided getInstance() {
+        if (instance == null) {
+            instance = new DBAuthenticationProvided();
+        }
+        return instance;
+    }
 
     @Override
     public void init() {
