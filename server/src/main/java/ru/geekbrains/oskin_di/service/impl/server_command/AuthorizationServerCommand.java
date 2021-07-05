@@ -22,13 +22,15 @@ public class AuthorizationServerCommand implements ServerCommandService {
         String password = command.getContext().split("_",2)[0];
 
         if (authenticationProvided.isCorrect(login,password)) {
+            String stringPath = null;
             try {
-                Path pathUser = Paths.get("./Cloud/", login + "-Cloud");//TODO
+                Path pathUser = Paths.get("./Cloud/", login + "-Cloud");
                 Files.createDirectory(pathUser);
+                stringPath = pathUser.toString();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return new Command(TypeCommand.CORRECT_LOGIN_AND_PASSWORD);
+            return new Command(TypeCommand.CORRECT_LOGIN_AND_PASSWORD,stringPath);
         } else {
             return new Command(TypeCommand.INCORRECT_LOGIN_OR_PASSWORD);
         }

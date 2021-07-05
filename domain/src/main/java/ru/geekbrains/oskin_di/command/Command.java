@@ -21,9 +21,18 @@ public class Command implements Serializable {
         this.context = context;
     }
 
+    public Command(TypeCommand typeCommand, String context, FileInfo fileInfo) {
+        this.typeCommand = typeCommand;
+        this.context = context;
+        this.fileInfo = fileInfo;
+    }
 
     public String getContext() {
         return context;
+    }
+
+    public void setFileInfo(FileInfo fileInfo) {
+        this.fileInfo = fileInfo;
     }
 
     public void setContext(String context) {

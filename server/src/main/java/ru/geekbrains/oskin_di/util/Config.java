@@ -1,14 +1,12 @@
 package ru.geekbrains.oskin_di.util;
 
-import javafx.fxml.Initializable;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class Config {
-
-    private static final String PATH_TO_PROPERTIES = "server/src/main/resources/properties/Server.properties";
 
     private static String db_url;
 
@@ -21,9 +19,9 @@ public class Config {
     private static String db_driver;
 
     public static void considerProperties() {
-        try (FileInputStream propertyFileInputStream = new FileInputStream(PATH_TO_PROPERTIES)) {
+        try (InputStream propertyInputStream = Config.class.getResourceAsStream("/properties/Server.properties")) {
             Properties properties = new Properties();
-            properties.load(propertyFileInputStream);
+            properties.load(propertyInputStream);
 
             db_url = properties.getProperty("db_url");
             port = Integer.parseInt(properties.getProperty("port"));
@@ -32,7 +30,7 @@ public class Config {
             db_driver = properties.getProperty("db_driver");
 
         } catch (IOException ioException) {
-            System.out.println("Ошибка в программе: файл " + PATH_TO_PROPERTIES + " не обнаружен");
+            System.out.println("Ошибка в программе: файл настроек не обнаружен");
             ioException.printStackTrace();
         }
     }

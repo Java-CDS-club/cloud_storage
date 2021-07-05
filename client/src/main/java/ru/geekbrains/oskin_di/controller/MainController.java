@@ -16,7 +16,6 @@ import ru.geekbrains.oskin_di.command.Command;
 import ru.geekbrains.oskin_di.command.TypeCommand;
 import ru.geekbrains.oskin_di.service.NetworkService;
 
-import java.io.IOException;
 import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -24,7 +23,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
+
 
 public class MainController implements Initializable {
 
@@ -49,7 +48,7 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         networkService = LoginController.getNetworkService();
-//        networkService.sendCommand(new Command(TypeCommand.UPDATE_CLOUD_TABLE,""),);
+        networkService.sendCommand(new Command(TypeCommand.UPDATE_CLOUD_TABLE,""),);
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
@@ -138,10 +137,10 @@ public class MainController implements Initializable {
         });
 
         updateList(Paths.get("."));
-//        Command command = CommandInboundHandler.getResultCommand();
-//        if(command.getTypeCommand() == TypeCommand.NEW_CLOUD_TABLE){
-//            updateTableCloud(command.getFileInfo());
-//        }
+        Command command = CommandInboundHandler.getResultCommand();
+        if(command.getTypeCommand() == TypeCommand.NEW_CLOUD_TABLE){
+            updateTableCloud(command.getFileInfo());
+        }
     }
 
     private void updateTableCloud(FileInfo cloudFileInfo) {

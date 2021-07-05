@@ -6,8 +6,7 @@ import ru.geekbrains.oskin_di.database.impl.DBAuthenticationProvided;
 import ru.geekbrains.oskin_di.service.CommandDictionaryService;
 import ru.geekbrains.oskin_di.service.ServerCommandService;
 import ru.geekbrains.oskin_di.service.impl.CommandDictionaryServiceImpl;
-import ru.geekbrains.oskin_di.service.impl.server_command.AuthorizationServerCommand;
-import ru.geekbrains.oskin_di.service.impl.server_command.RegistrationServerCommand;
+import ru.geekbrains.oskin_di.service.impl.server_command.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +26,10 @@ public class Factory {
     }
 
     public static List<ServerCommandService> getCommandServices() {
-        return Arrays.asList(new AuthorizationServerCommand(), new RegistrationServerCommand());
+        return Arrays.asList(new AuthorizationServerCommand(),
+                new RegistrationServerCommand(),
+                new GiveFilesServerCommand(),
+                new UnloadingServerCommand(),
+                new LoadingServerCommand());
     }
 }

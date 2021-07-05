@@ -2,26 +2,25 @@ package ru.geekbrains.oskin_di.util;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class Config {
-
-    private static final String PATH_TO_PROPERTIES = "client/src/main/resources/properties/Client.properties";
 
     private static int port;
 
     private static String address;
 
     public static void considerProperties() {
-        try (FileInputStream propertyFileInputStream = new FileInputStream(PATH_TO_PROPERTIES)) {
+        try (InputStream propertyInputStream = Config.class.getResourceAsStream("/properties/Client.properties")) {
             Properties properties = new Properties();
-            properties.load(propertyFileInputStream);
+            properties.load(propertyInputStream);
 
             port = Integer.parseInt(properties.getProperty("port"));
             address = properties.getProperty("address");
 
         } catch (IOException ioException) {
-            System.out.println("Ошибка в программе: файл " + PATH_TO_PROPERTIES + " не обнаружен");
+            System.out.println("Ошибка в программе: файл настроек не обнаружен");
             ioException.printStackTrace();
         }
     }
