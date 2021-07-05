@@ -14,8 +14,8 @@ public class DBConnection {
     private static final String USER = Config.getDb_login();
     private static final String PASSWORD = Config.getDb_password();
 
-    private Connection connection;
-    private Statement stmt;
+    private final Connection connection;
+    private final Statement stmt;
 
     public Statement getStmt() {
         return stmt;
@@ -37,14 +37,14 @@ public class DBConnection {
             try {
                 stmt.close();
             } catch (SQLException e) {
-
+                e.printStackTrace();
             }
         }
         if (connection != null) {
             try {
                 connection.close();
             } catch (SQLException e) {
-
+                e.printStackTrace();
             }
         }
     }

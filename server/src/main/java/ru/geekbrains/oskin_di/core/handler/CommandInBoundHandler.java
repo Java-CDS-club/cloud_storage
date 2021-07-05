@@ -15,12 +15,6 @@ import java.io.File;
 
 public class CommandInBoundHandler extends SimpleChannelInboundHandler<Command> {
 
-    private String userPath;
-
-    public CommandInBoundHandler(String userPath) {
-        this.userPath = userPath;
-    }
-
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, Command command) throws Exception {
 
@@ -50,4 +44,5 @@ public class CommandInBoundHandler extends SimpleChannelInboundHandler<Command> 
             channelHandlerContext.writeAndFlush(chunkedFile);
         }
     }
+
 }

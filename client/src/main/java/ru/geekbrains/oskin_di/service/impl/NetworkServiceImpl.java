@@ -2,12 +2,13 @@ package ru.geekbrains.oskin_di.service.impl;
 
 import ru.geekbrains.oskin_di.command.Command;
 import ru.geekbrains.oskin_di.core.NettyClient;
+import ru.geekbrains.oskin_di.factory.Factory;
 import ru.geekbrains.oskin_di.service.Callback;
 import ru.geekbrains.oskin_di.service.NetworkService;
 
 public class NetworkServiceImpl implements NetworkService {
 
-    private NettyClient client;
+    private final NettyClient client = Factory.getClientService();
 
     private static NetworkServiceImpl instance;
 

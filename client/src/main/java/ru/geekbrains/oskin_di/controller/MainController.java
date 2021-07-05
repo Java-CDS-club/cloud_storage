@@ -12,10 +12,12 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import ru.geekbrains.oskin_di.FileInfo;
+import ru.geekbrains.oskin_di.MainWindow;
 import ru.geekbrains.oskin_di.command.Command;
 import ru.geekbrains.oskin_di.command.TypeCommand;
 import ru.geekbrains.oskin_di.service.NetworkService;
 
+import java.io.IOException;
 import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -23,11 +25,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 
 public class MainController implements Initializable {
 
-    private static NetworkService networkService;
+    private static String cloudPath = MainWindow.getCloudPath();
+
+    private static NetworkService networkService = MainWindow.getNetworkService();
+
 
     @FXML
     AnchorPane window;
@@ -47,13 +53,6 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        networkService = LoginController.getNetworkService();
-        networkService.sendCommand(new Command(TypeCommand.UPDATE_CLOUD_TABLE,""),);
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         TableColumn<FileInfo, String> filenameColumn = new TableColumn<>("Имя");
         filenameColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getFilename()));
@@ -104,50 +103,69 @@ public class MainController implements Initializable {
         disksBox.getSelectionModel().select(0);
 
 
-        ContextMenu contextMenu = new ContextMenu();
-        MenuItem openItem = new MenuItem("Открыть");
-        openItem.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
+//        ContextMenu contextMenu = new ContextMenu();
+//        MenuItem openItem = new MenuItem("Открыть");
+//        openItem.setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent actionEvent) {
+//
+//            }
+//        });
+//        contextMenu.getItems().add(openItem);
+//        MenuItem copyItem = new MenuItem("Копировать");
+//        contextMenu.getItems().add(copyItem);
+//        MenuItem moveItem = new MenuItem("Переместить");
+//        contextMenu.getItems().add(moveItem);
+//        MenuItem deleteItem = new MenuItem("Удалить");
+//        contextMenu.getItems().add(deleteItem);
 
-            }
-        });
-        contextMenu.getItems().add(openItem);
-        MenuItem copyItem = new MenuItem("Копировать");
-        contextMenu.getItems().add(copyItem);
-        MenuItem moveItem = new MenuItem("Переместить");
-        contextMenu.getItems().add(moveItem);
-        MenuItem deleteItem = new MenuItem("Удалить");
-        contextMenu.getItems().add(deleteItem);
 
+//        tablePC.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//            @Override
+//            public void handle(MouseEvent mouseEvent) {
+//                if (mouseEvent.getClickCount() == 2) {
+//                    Path path = Paths.get(pathField.getText()).resolve(tablePC.getSelectionModel().getSelectedItem().getFilename());
+//                    if (Files.isDirectory(path)) {
+//                        updateList(path);
+//                    }
+//                }
+//                if (mouseEvent.getButton() == MouseButton.SECONDARY) {
+//                    contextMenu.show(tablePC, mouseEvent.getScreenX(), mouseEvent.getScreenY());
+//                }
+//            }
+//        });
 
-        tablePC.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if (mouseEvent.getClickCount() == 2) {
-                    Path path = Paths.get(pathField.getText()).resolve(tablePC.getSelectionModel().getSelectedItem().getFilename());
-                    if (Files.isDirectory(path)) {
-                        updateList(path);
-                    }
-                }
-                if (mouseEvent.getButton() == MouseButton.SECONDARY) {
-                    contextMenu.show(tablePC, mouseEvent.getScreenX(), mouseEvent.getScreenY());
-                }
-            }
-        });
-
-        updateList(Paths.get("."));
-        Command command = CommandInboundHandler.getResultCommand();
-        if(command.getTypeCommand() == TypeCommand.NEW_CLOUD_TABLE){
-            updateTableCloud(command.getFileInfo());
-        }
+        updateList(Paths.get("./"));
+//        updateTableCloud();
     }
 
-    private void updateTableCloud(FileInfo cloudFileInfo) {
-        System.out.println(cloudFileInfo);
-        tableCloud.getItems().clear();
-        tableCloud.getItems().addAll(cloudFileInfo.getSuccessor());
-        tableCloud.sort();
+    private void updateTableCloud(){
+        networkService.sendCommand(new Command(TypeCommand.UPDATE_CLOUD_TABLE, cloudPath), resultCommand -> {
+            Platform.runLater(() -> {
+                if (resultCommand.getTypeCommand() == TypeCommand.NEW_CLOUD_TABLE) {
+                    tableCloud.getItems().clear();
+                    tableCloud.getItems().addAll(resultCommand.getFileInfo().getSuccessor());
+                    tableCloud.sort();
+                }
+            });
+        });
+    }
+
+    private void updateList(Path path) {
+        FileInfo fileInfo = new FileInfo(path);
+        System.out.println(fileInfo);
+        fileInfo.writeSuccessor();
+        tablePC.getItems().clear();
+        try {
+            tablePC.getItems().addAll(Files.list(path).map(FileInfo::new).collect(Collectors.toList()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        tablePC.sort();
+    }
+
+    private void fillInTable(TableView<FileInfo> table) {
+
     }
 
     public void btnChangeUserAction(ActionEvent actionEvent) {
@@ -172,12 +190,7 @@ public class MainController implements Initializable {
     public void btnDeleteAction(ActionEvent actionEvent) {
     }
 
-    public void updateList(Path path) {
-        FileInfo fileInfo = new FileInfo(path);
-        tablePC.getItems().clear();
-        tablePC.getItems().addAll(fileInfo.getSuccessor());
-        tablePC.sort();
-    }
+
 
     private String formatItemSize(Long item) {
         StringBuilder format = new StringBuilder();
@@ -196,10 +209,5 @@ public class MainController implements Initializable {
             return "0 KB";
         }
     }
-
-    private void openFile() {
-
-    }
-
 
 }

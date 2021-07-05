@@ -26,7 +26,7 @@ public class AuthenticationInboundHandler extends SimpleChannelInboundHandler<Co
             channelHandlerContext.writeAndFlush(resultCommand);
             if (resultCommand.getTypeCommand() == TypeCommand.CORRECT_LOGIN_AND_PASSWORD) {
                 channelHandlerContext.channel().pipeline().addLast(new ChunkedWriteHandler());
-                channelHandlerContext.channel().pipeline().addLast(new CommandInBoundHandler(resultCommand.getContext()));
+                channelHandlerContext.channel().pipeline().addLast(new CommandInBoundHandler());
                 channelHandlerContext.channel().pipeline().remove(this);
             }
         }

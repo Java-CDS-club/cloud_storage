@@ -1,7 +1,5 @@
 package ru.geekbrains.oskin_di.database;
 
-import java.util.Optional;
-
 public interface AuthenticationProvided {
 
         void init();

@@ -43,29 +43,31 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Config.considerProperties();
-        if (networkService == null){
+        if (networkService == null) {
             networkService = Factory.getNetworkService();
         }
         networkService.openConnection();
     }
 
-    public void btnEntrance(ActionEvent actionEvent){
+    public void btnEntrance(ActionEvent actionEvent) {
         statusLabel.setText("");
         String login_and_pass = loginField.getText() + "_" + passField.getText();
-        networkService.sendCommand(new Command(TypeCommand.AUTHORIZATION,login_and_pass),resultCommand -> {
+        networkService.sendCommand(new Command(TypeCommand.AUTHORIZATION, login_and_pass), resultCommand -> {
             Platform.runLater(() -> {
-                switch (resultCommand.getTypeCommand()){
+                switch (resultCommand.getTypeCommand()) {
                     case INCORRECT_LOGIN_OR_PASSWORD -> statusLabel.setText(TypeCommand.INCORRECT_LOGIN_OR_PASSWORD.getInfo());
-                    case CORRECT_LOGIN_AND_PASSWORD -> openMainWindow(actionEvent);
+                    case CORRECT_LOGIN_AND_PASSWORD -> openMainWindow(actionEvent,resultCommand);
                 }
             });
         });
     }
 
-    private void openMainWindow(ActionEvent actionEvent){
+    private void openMainWindow(ActionEvent actionEvent, Command command) {
         ((Node) (actionEvent.getSource())).getScene().getWindow().hide();
         Stage stage = new Stage();
         MainWindow mainWindow = new MainWindow();
+        MainWindow.setCloudPath(command.getContext());
+        MainWindow.setNetworkService(networkService);
         try {
             mainWindow.start(stage);
         } catch (Exception e) {
@@ -76,9 +78,9 @@ public class LoginController implements Initializable {
     public void btnRegistration(ActionEvent actionEvent) {
         statusLabel.setText("");
         String login_and_pass = loginField.getText() + "_" + passField.getText();
-        networkService.sendCommand(new Command(TypeCommand.REGISTRATION,login_and_pass),resultCommand -> {
+        networkService.sendCommand(new Command(TypeCommand.REGISTRATION, login_and_pass), resultCommand -> {
             Platform.runLater(() -> {
-                switch (resultCommand.getTypeCommand()){
+                switch (resultCommand.getTypeCommand()) {
                     case REGISTRATION_FAILURE -> statusLabel.setText(TypeCommand.REGISTRATION_FAILURE.getInfo());
                     case REGISTRATION_SUCCESSFULLY -> statusLabel.setText(TypeCommand.REGISTRATION_SUCCESSFULLY.getInfo());
                 }

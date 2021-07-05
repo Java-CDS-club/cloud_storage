@@ -16,14 +16,18 @@ public class DBAuthenticationProvided implements AuthenticationProvided {
     public static DBAuthenticationProvided getInstance() {
         if (instance == null) {
             instance = new DBAuthenticationProvided();
+
         }
         return instance;
+    }
+
+    public DBAuthenticationProvided() {
+        init();
     }
 
     @Override
     public void init() {
         dbConnection = new DBConnection();
-
     }
 
     @Override

@@ -1,24 +1,43 @@
 package ru.geekbrains.oskin_di;
 
-import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import ru.geekbrains.oskin_di.service.NetworkService;
 
 public class MainWindow{
 
+    private static String cloudPath;
+
+    private static NetworkService networkService;
+
 
     public void start(Stage primaryStage) throws Exception{
-
-        Parent root = FXMLLoader.load(getClass().getResource("/view/main_panel.fxml"));
-        primaryStage.getIcons().add(new Image("/view/icon.png"));
-        primaryStage.setTitle("Portfile");
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/view/main_panel.fxml"));
+        Parent root = loader.load();
+        primaryStage.getIcons().add(new Image("/image/icon.png"));
+        primaryStage.setTitle("Port_file");
         primaryStage.setScene(new Scene(root, 1012, 600));
         primaryStage.show();
         primaryStage.setResizable(false);
     }
 
+    public static String getCloudPath() {
+        return cloudPath;
+    }
 
+    public static void setCloudPath(String cloudPath) {
+        MainWindow.cloudPath = cloudPath;
+    }
+
+    public static NetworkService getNetworkService() {
+        return networkService;
+    }
+
+    public static void setNetworkService(NetworkService networkService) {
+        MainWindow.networkService = networkService;
+    }
 }

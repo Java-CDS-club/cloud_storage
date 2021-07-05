@@ -18,19 +18,19 @@ public class AuthorizationServerCommand implements ServerCommandService {
 
     @Override
     public Command processCommand(Command command) {
-        String login = command.getContext().split("_",2)[0];
-        String password = command.getContext().split("_",2)[0];
+        String login = command.getContext().split("_", 2)[0];
+        String password = command.getContext().split("_", 2)[0];
 
-        if (authenticationProvided.isCorrect(login,password)) {
+        if (authenticationProvided.isCorrect(login, password)) {
             String stringPath = null;
             try {
-                Path pathUser = Paths.get("./Cloud/", login + "-Cloud");
-                Files.createDirectory(pathUser);
+                Path pathUser = Paths.get("./CLOUD", login + "-CLOUD/");
+                Files.createDirectories(pathUser);
                 stringPath = pathUser.toString();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return new Command(TypeCommand.CORRECT_LOGIN_AND_PASSWORD,stringPath);
+            return new Command(TypeCommand.CORRECT_LOGIN_AND_PASSWORD, stringPath);
         } else {
             return new Command(TypeCommand.INCORRECT_LOGIN_OR_PASSWORD);
         }
