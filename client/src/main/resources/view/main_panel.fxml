@@ -25,11 +25,11 @@
                         <HBox prefHeight="25.0" prefWidth="475.0">
                             <children>
                                 <ComboBox fx:id="disksBox" onAction="#selectDiskAction" prefHeight="35.0" prefWidth="60.0" />
-                                <TextField fx:id="pathField" prefHeight="25.0" prefWidth="360.0" />
-                                <Button mnemonicParsing="false" onAction="#btnPathUpAction" prefHeight="25.0" prefWidth="65.0" text="Вверх" />
+                                <TextField fx:id="pathLocalField" prefHeight="25.0" prefWidth="360.0" />
+                                <Button mnemonicParsing="false" onAction="#btnPathUpAction" prefHeight="25.0" prefWidth="65.0" text="Вверх" focusTraversable="false"/>
                             </children>
                         </HBox>
-                        <TableView fx:id="tablePC" prefHeight="500.0" prefWidth="475.0" VBox.vgrow="ALWAYS">
+                        <TableView fx:id="tableLocal" prefHeight="500.0" prefWidth="475.0" VBox.vgrow="ALWAYS">
                             <cursor>
                                 <Cursor fx:constant="OPEN_HAND" />
                             </cursor>
@@ -38,7 +38,7 @@
                 </VBox>
                 <VBox alignment="CENTER" prefHeight="523.0" prefWidth="62.0">
                     <children>
-                        <Button alignment="TOP_LEFT" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="&lt;">
+                        <Button alignment="TOP_LEFT" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="&lt;" focusTraversable="false">
                             <font>
                                 <Font size="14.0" />
                             </font>
@@ -46,7 +46,7 @@
                                 <Insets bottom="20.0" />
                             </VBox.margin>
                         </Button>
-                        <Button alignment="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="&gt;" textAlignment="CENTER">
+                        <Button alignment="CENTER" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="&gt;" textAlignment="CENTER" focusTraversable="false">
                             <font>
                                 <Font size="14.0" />
                             </font>
@@ -57,9 +57,9 @@
                     <children>
                         <HBox prefHeight="25.0" prefWidth="475.0">
                             <children>
-                                <ComboBox prefHeight="35.0" prefWidth="60.0" />
-                                <TextField prefHeight="25.0" prefWidth="360.0" />
-                                <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Вверх" />
+                                <ComboBox fx:id="cloudBox" prefHeight="35.0" prefWidth="60.0" />
+                                <TextField fx:id="pathCloudField" prefHeight="25.0" prefWidth="360.0" />
+                                <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="65.0" text="Вверх" focusTraversable="false"/>
                             </children>
                         </HBox>
                         <TableView fx:id="tableCloud" prefHeight="500.0" prefWidth="475.0">

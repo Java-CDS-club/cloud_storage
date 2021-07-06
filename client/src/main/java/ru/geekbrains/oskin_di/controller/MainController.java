@@ -3,29 +3,26 @@ package ru.geekbrains.oskin_di.controller;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import ru.geekbrains.oskin_di.FileInfo;
 import ru.geekbrains.oskin_di.MainWindow;
 import ru.geekbrains.oskin_di.command.Command;
 import ru.geekbrains.oskin_di.command.TypeCommand;
 import ru.geekbrains.oskin_di.service.NetworkService;
+import ru.geekbrains.oskin_di.util.FieldType;
 
-import java.io.IOException;
+import java.io.File;
 import java.net.URL;
 import java.nio.file.FileSystems;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 
 public class MainController implements Initializable {
@@ -34,12 +31,11 @@ public class MainController implements Initializable {
 
     private static NetworkService networkService = MainWindow.getNetworkService();
 
-
     @FXML
     AnchorPane window;
 
     @FXML
-    TableView<FileInfo> tablePC;
+    TableView<FileInfo> tableLocal;
 
     @FXML
     TableView<FileInfo> tableCloud;
@@ -48,59 +44,34 @@ public class MainController implements Initializable {
     ComboBox<String> disksBox;
 
     @FXML
-    TextField pathField;
+    ComboBox<String> cloudBox;
 
+    @FXML
+    TextField pathLocalField;
+
+    @FXML
+    TextField pathCloudField;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        TableColumn<FileInfo, String> filenameColumn = new TableColumn<>("Имя");
-        filenameColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getFilename()));
-        filenameColumn.setPrefWidth(120);
+        addColumnNamesTable (tableLocal);
+        addColumnNamesTable (tableCloud);
 
-        TableColumn<FileInfo, String> fileTypeColumn = new TableColumn<>("Тип");
-        fileTypeColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getType().getName()));
-        fileTypeColumn.setPrefWidth(120);
+        pathLocalField.setText(System.getProperty("user.dir"));
+        pathCloudField.setText (cloudPath);
 
-        TableColumn<FileInfo, Long> fileSizeColumn = new TableColumn<>("Размер");
-        fileSizeColumn.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue().getSize()));
-        fileSizeColumn.setCellFactory(column -> {
-            return new TableCell<FileInfo, Long>() {
-                @Override
-                protected void updateItem(Long item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (item == null || empty) {
-                        setText(null);
-                        setStyle("");
-                    } else {
-                        String text = formatItemSize(item);
-                        if (item == -1L) {
-                            text = "";
-                        }
-                        setText(text);
-                    }
-                }
-            };
-        });
-        fileSizeColumn.setPrefWidth(120);
-
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        TableColumn<FileInfo, String> fileDateColumn = new TableColumn<>("Дата изменения");
-        fileDateColumn.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getLastModified().format(dtf)));
-        fileDateColumn.setPrefWidth(120);
-
-        tablePC.getColumns().addAll(filenameColumn, fileTypeColumn, fileSizeColumn, fileDateColumn);
-        tablePC.getSortOrder().add(filenameColumn);
-
-        tableCloud.getColumns().addAll(filenameColumn, fileTypeColumn, fileSizeColumn, fileDateColumn);
-        tableCloud.getSortOrder().add(filenameColumn);
-
+        updateLocalTable();
+        updateTableCloud();
 
         disksBox.getItems().clear();
         for (Path p : FileSystems.getDefault().getRootDirectories()) {
             disksBox.getItems().add(p.toString());
         }
         disksBox.getSelectionModel().select(0);
+
+        cloudBox.getItems ().clear ();
+        cloudBox.getItems ().add (cloudPath);
 
 
 //        ContextMenu contextMenu = new ContextMenu();
@@ -135,38 +106,119 @@ public class MainController implements Initializable {
 //            }
 //        });
 
-        updateList(Paths.get("./"));
-//        updateTableCloud();
+
+    }
+
+    private void addColumnNamesTable(TableView<FileInfo> tableView){
+        tableView.getColumns().addAll(createColumn (FieldType.NAME), createColumn (FieldType.TYPE), createColumn (FieldType.SIZE), createColumn (FieldType.DATE));
+    }
+
+    private TableColumn<FileInfo,String> createColumn(FieldType fieldType){
+        TableColumn<FileInfo, String> fileColumn = new TableColumn<>();
+
+        switch (fieldType){
+            case DATE -> fileColumn.setCellValueFactory(this::callTime);
+            case NAME -> fileColumn.setCellValueFactory(this::callFilename);
+            case SIZE -> fileColumn.setCellValueFactory (this::callSize);
+            case TYPE -> fileColumn.setCellValueFactory(this::callType);
+        }
+
+        fileColumn.setText(fieldType.getInfo());
+        fileColumn.setPrefWidth(120);
+
+        return fileColumn;
+    }
+
+    private ObservableValue<String> callFilename(TableColumn.CellDataFeatures<FileInfo, String> param) {
+        return new SimpleStringProperty(param.getValue().getFilename());
+    }
+
+    private ObservableValue<String> callType(TableColumn.CellDataFeatures<FileInfo, String> param) {
+        return new SimpleStringProperty(param.getValue().getType().getName());
+    }
+
+    private ObservableValue<String> callSize(TableColumn.CellDataFeatures<FileInfo,String> param) {
+        return new SimpleObjectProperty(param.getValue().getStringSize());
+    }
+
+    private ObservableValue<String> callTime(TableColumn.CellDataFeatures<FileInfo, String> param) {
+        return new SimpleObjectProperty(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(param.getValue().getLastModified()));
     }
 
     private void updateTableCloud(){
         networkService.sendCommand(new Command(TypeCommand.UPDATE_CLOUD_TABLE, cloudPath), resultCommand -> {
             Platform.runLater(() -> {
                 if (resultCommand.getTypeCommand() == TypeCommand.NEW_CLOUD_TABLE) {
-                    tableCloud.getItems().clear();
-                    tableCloud.getItems().addAll(resultCommand.getFileInfo().getSuccessor());
-                    tableCloud.sort();
+                    pathCloudField.setText (resultCommand.getFileInfo ().getStringPath ());
+                    fillTable (tableCloud,resultCommand.getFileInfo ());
                 }
             });
         });
     }
 
-    private void updateList(Path path) {
-        FileInfo fileInfo = new FileInfo(path);
-        System.out.println(fileInfo);
-        fileInfo.writeSuccessor();
-        tablePC.getItems().clear();
-        try {
-            tablePC.getItems().addAll(Files.list(path).map(FileInfo::new).collect(Collectors.toList()));
-        } catch (IOException e) {
-            e.printStackTrace();
+    private void updateLocalTable(){
+        FileInfo fileInfo = new FileInfo (Paths.get (getCurrentPath (pathLocalField)));
+        fileInfo.writeSuccessor ();
+        pathLocalField.setText (fileInfo.getStringPath ());
+        fillTable (tableLocal,fileInfo);
+    }
+
+
+    private void fillTable(TableView<FileInfo> tableView, FileInfo fileInfo){
+        tableView.getItems().clear();
+        tableView.getItems().addAll(fileInfo.getSuccessor());
+        tableView.sort();
+    }
+
+
+    public void btnUploadCommand() {
+        Path path = Paths.get (pathLocalField.getText (), getSelectedFilename (tableLocal));
+        File file = new File(path.toString());
+        if (file.isDirectory()) {
+            return;
         }
-        tablePC.sort();
+        Command command = new Command(TypeCommand.UNLOADING, new FileInfo (path));
+        networkService.sendCommand(command, (resultCommand) -> {
+            if (resultCommand.getTypeCommand() == TypeCommand.UNLOADING_START) {
+                networkService.sendFile(command, (res) -> {
+                    if (res.getCommandName() == CommandType.UPLOAD_COMPLETE) {
+                        updateTableCloud();
+                    }
+                });
+            }
+        });
     }
 
-    private void fillInTable(TableView<FileInfo> table) {
-
+    public void btnDownloadCommand() {
+        String path = getCurrentPath(cloudPathField) + File.separator + getSelectedFilename(cloudFiles);
+        FileType type = cloudFiles.getSelectionModel().getSelectedItem().getType();
+        if (type == FileType.DIRECTORY) {
+            return;
+        }
+        File file = new File(path);
+        Command command = new Command(CommandType.DOWNLOAD, "", new Object[]{});
+        networkService.sendCommand(command, (result) -> {
+            if (result.getCommandName() == CommandType.DOWNLOAD_READY) {
+                networkService.sendDownloadCommand(new Command(CommandType.DOWNLOAD_READY, path, new Object[]{getSelectedFilename(cloudFiles), file.length(), getCurrentPath(localPathField)}), (res) -> {
+                    if (res.getCommandName() == CommandType.DOWNLOAD_COMPLETE) {
+                        refreshLocalDirs();
+                    }
+                });
+            }
+        });
     }
+
+
+
+
+
+
+
+
+
+
+
+
 
     public void btnChangeUserAction(ActionEvent actionEvent) {
     }
@@ -176,9 +228,17 @@ public class MainController implements Initializable {
     }
 
     public void selectDiskAction(ActionEvent actionEvent) {
+        ComboBox<String> element = (ComboBox<String>) actionEvent.getSource();
+        pathLocalField.setText (element.getSelectionModel().getSelectedItem());
+        updateLocalTable();
     }
 
     public void btnPathUpAction(ActionEvent actionEvent) {
+        Path upperPath = Paths.get(getCurrentPath (pathLocalField)).getParent();
+        pathLocalField.setText (upperPath.toString ());
+        if (upperPath != null) {
+            updateLocalTable();
+        }
     }
 
     public void btnCopyAction(ActionEvent actionEvent) {
@@ -190,24 +250,14 @@ public class MainController implements Initializable {
     public void btnDeleteAction(ActionEvent actionEvent) {
     }
 
-
-
-    private String formatItemSize(Long item) {
-        StringBuilder format = new StringBuilder();
-        if (item >= 1048576) {
-            format.append(item / 1048576);
-            format.append(" MB");
-            return format.toString();
-        } else if (item >= 1024) {
-            format.append(item / 1024);
-            format.append(" KB");
-            return format.toString();
-        } else if (item > 0) {
-            format.append("1 KB");
-            return format.toString();
-        } else {
-            return "0 KB";
-        }
+    private String getSelectedFilename(TableView<FileInfo> tableView) {
+        return tableView.getSelectionModel().getSelectedItem().getFilename ();
     }
+
+    private String getCurrentPath(TextField textField){
+        return textField.getText ();
+    }
+
+
 
 }

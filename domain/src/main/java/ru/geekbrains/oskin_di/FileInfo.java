@@ -32,7 +32,9 @@ public class FileInfo implements Serializable {
     private String stringPath;
     private FileType type;
     private long size;
+    private String stringSize;
     private LocalDateTime lastModified;
+
 
 
     public FileInfo(Path path) {
@@ -40,6 +42,7 @@ public class FileInfo implements Serializable {
             this.filename = path.getFileName().toString();
             this.stringPath = path.toFile().getPath();
             this.size = Files.isDirectory(path) ? -1L : Files.size(path);
+            this.stringSize = formatItemSize (size);
             this.type = Files.isDirectory(path) ? FileType.DIRECTORY : FileType.FILE;
             this.lastModified = LocalDateTime.ofInstant(Files.getLastModifiedTime(path).toInstant(), ZoneOffset.ofHours(0));
 
@@ -55,6 +58,28 @@ public class FileInfo implements Serializable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private String formatItemSize(Long item) {
+
+        if (item == -1L) {
+            return "";
+        }
+        StringBuilder format = new StringBuilder();
+        if (item >= 1048576) {
+            format.append(item / 1048576);
+            format.append(" MB");
+            return format.toString();
+        } else if (item >= 1024) {
+            format.append(item / 1024);
+            format.append(" KB");
+            return format.toString();
+        } else if (item > 0) {
+            format.append("1 KB");
+            return format.toString();
+        } else {
+            return "0 KB";
         }
     }
 
@@ -106,6 +131,14 @@ public class FileInfo implements Serializable {
         this.lastModified = lastModified;
     }
 
+    public String getStringSize() {
+        return stringSize;
+    }
+
+    public void setStringSize(String stringSize) {
+        this.stringSize = stringSize;
+    }
+
     @Override
     public String toString() {
         return "FileInfo{" +
@@ -114,6 +147,7 @@ public class FileInfo implements Serializable {
                 ", stringPath='" + stringPath + '\'' +
                 ", type=" + type +
                 ", size=" + size +
+                ", stringSize='" + stringSize + '\'' +
                 ", lastModified=" + lastModified +
                 '}';
     }

@@ -26,10 +26,9 @@ public class Factory {
     }
 
     public static List<ServerCommandService> getCommandServices() {
-        return Arrays.asList(new AuthorizationServerCommand(),
-                new RegistrationServerCommand(),
+        return Arrays.asList(
                 new GiveFilesServerCommand(),
                 new UnloadingServerCommand(),
-                new LoadingServerCommand());
+                new LoadingServerCommand());//TODO
     }
 }
