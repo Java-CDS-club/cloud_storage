@@ -56,7 +56,7 @@ public class LoginController implements Initializable {
             Platform.runLater(() -> {
                 switch (resultCommand.getTypeCommand()) {
                     case INCORRECT_LOGIN_OR_PASSWORD -> statusLabel.setText(TypeCommand.INCORRECT_LOGIN_OR_PASSWORD.getInfo());
-                    case CORRECT_LOGIN_AND_PASSWORD -> openMainWindow(actionEvent,resultCommand);
+                    case CORRECT_LOGIN_AND_PASSWORD -> openMainWindow(actionEvent, resultCommand);
                 }
             });
         });

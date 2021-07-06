@@ -14,16 +14,15 @@ public class AuthenticationInboundHandler extends SimpleChannelInboundHandler<Co
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, Command command) throws Exception {
 
-//        CommandDictionaryService commandDictionaryService = Factory.getCommandDirectoryService();
+        CommandDictionaryService commandDictionaryService = Factory.getCommandDirectoryService();
 
-//        if (command.getTypeCommand() == TypeCommand.REGISTRATION) {
-//            Command resultCommand = commandDictionaryService.processCommand(command);
-//            channelHandlerContext.writeAndFlush(resultCommand);
-//        }
+        if (command.getTypeCommand() == TypeCommand.REGISTRATION) {
+            Command resultCommand = commandDictionaryService.processCommand(command);
+            channelHandlerContext.writeAndFlush(resultCommand);
+        }
 
         if (command.getTypeCommand() == TypeCommand.AUTHORIZATION) {
-//            Command resultCommand = commandDictionaryService.processCommand(command);
-            Command resultCommand = new Command(TypeCommand.CORRECT_LOGIN_AND_PASSWORD,"./CLOUD/MAX-CLOUD/");
+            Command resultCommand = commandDictionaryService.processCommand(command);
             channelHandlerContext.writeAndFlush(resultCommand);
 
             if (resultCommand.getTypeCommand() == TypeCommand.CORRECT_LOGIN_AND_PASSWORD) {

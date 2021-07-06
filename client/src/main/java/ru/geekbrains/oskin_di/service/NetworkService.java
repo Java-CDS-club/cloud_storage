@@ -6,6 +6,8 @@ public interface NetworkService {
 
     void sendCommand(Command command, Callback callback);
 
+    void unloadFile(Command command, Callback callback);
+
     void openConnection();
 
     void closeConnection();

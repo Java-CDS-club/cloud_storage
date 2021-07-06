@@ -12,12 +12,12 @@ public class RegistrationServerCommand implements ServerCommandService {
     AuthenticationProvided authenticationProvided = Factory.getAuthenticationProvided();
 
     @Override
-    public Command processCommand(Command command){
+    public Command processCommand(Command command) {
 
-        String login = command.getContext().split("_",2)[0];
-        String password = command.getContext().split("_",2)[0];
+        String login = command.getContext().split("_", 2)[0];
+        String password = command.getContext().split("_", 2)[0];
 
-        if (authenticationProvided.addClient(login,password)) {
+        if (authenticationProvided.addClient(login, password)) {
             return new Command(TypeCommand.REGISTRATION_SUCCESSFULLY);
         } else {
             return new Command(TypeCommand.REGISTRATION_FAILURE);

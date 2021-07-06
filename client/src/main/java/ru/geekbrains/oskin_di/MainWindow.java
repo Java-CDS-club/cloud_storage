@@ -7,14 +7,14 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import ru.geekbrains.oskin_di.service.NetworkService;
 
-public class MainWindow{
+public class MainWindow {
 
     private static String cloudPath;
 
     private static NetworkService networkService;
 
 
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
 
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/view/main_panel.fxml"));

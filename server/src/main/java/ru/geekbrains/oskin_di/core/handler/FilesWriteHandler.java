@@ -40,12 +40,12 @@ public class FilesWriteHandler extends ChannelInboundHandlerAdapter {
         }
 
         channelHandlerContext.channel().pipeline().remove(this);
-        channelHandlerContext.channel().pipeline().addLast (new ObjectEncoder ());
-        channelHandlerContext.channel().pipeline().addLast (new ObjectDecoder (ClassResolvers.cacheDisabled(null)));
+        channelHandlerContext.channel().pipeline().addLast(new ObjectEncoder());
+        channelHandlerContext.channel().pipeline().addLast(new ObjectDecoder(ClassResolvers.cacheDisabled(null)));
         channelHandlerContext.channel().pipeline().addLast(new ChunkedWriteHandler());
         channelHandlerContext.channel().pipeline().addLast(new CommandInBoundHandler());
 
-        channelHandlerContext.writeAndFlush (new Command (TypeCommand.LOADING_END));
+        channelHandlerContext.writeAndFlush(new Command(TypeCommand.LOADING_END));
 
     }
 }

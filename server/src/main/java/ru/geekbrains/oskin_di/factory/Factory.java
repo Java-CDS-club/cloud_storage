@@ -13,11 +13,11 @@ import java.util.List;
 
 public class Factory {
 
-    public static NettyServer getNettyServer(){
+    public static NettyServer getNettyServer() {
         return NettyServer.getInstance();
     }
 
-    public static AuthenticationProvided getAuthenticationProvided(){
+    public static AuthenticationProvided getAuthenticationProvided() {
         return DBAuthenticationProvided.getInstance();
     }
 
@@ -27,8 +27,10 @@ public class Factory {
 
     public static List<ServerCommandService> getCommandServices() {
         return Arrays.asList(
+                new AuthorizationServerCommand(),
+                new RegistrationServerCommand(),
                 new GiveFilesServerCommand(),
                 new UnloadingServerCommand(),
-                new LoadingServerCommand());//TODO
+                new LoadingServerCommand());
     }
 }

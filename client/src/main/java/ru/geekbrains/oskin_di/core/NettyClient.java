@@ -12,6 +12,7 @@ import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import io.netty.handler.stream.ChunkedFile;
+import io.netty.handler.stream.ChunkedWriteHandler;
 import ru.geekbrains.oskin_di.command.Command;
 import ru.geekbrains.oskin_di.core.handler.CommandInboundHandler;
 import ru.geekbrains.oskin_di.service.Callback;
@@ -48,7 +49,8 @@ public class NettyClient {
                                 socketChannel.pipeline().addLast(
                                         new ObjectDecoder(ClassResolvers.cacheDisabled(null)),
                                         new ObjectEncoder(),
-                                        new CommandInboundHandler()
+                                        new CommandInboundHandler(),
+                                        new ChunkedWriteHandler()
                                 );
                             }
                         });
@@ -80,19 +82,10 @@ public class NettyClient {
         channel.writeAndFlush(command);
     }
 
-    @Override
-    public void loadingFile(Command command, Callback callback) {
-
-        channel.writeAndFlush(command);
-        switchToFileDownloadPipeline(channel, (String) command.getArgs()[0], (long) command.getArgs()[1], (String) command.getArgs()[2], callback);
-    }
-
-    @Override
     public void unloadingFile(Command command, Callback callback) {
         try {
-            channel.writeAndFlush(new ChunkedFile (new File (command.getPath())));
-            ChannelPipeline p = channel.pipeline();
-            p.get(DataInboundHandler.class).setIncomingData(callback);
+            channel.writeAndFlush(new ChunkedFile(new File(command.getFileInfo().getStringPath())));
+            channel.pipeline().get(CommandInboundHandler.class).setResultCommand(callback);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -36,13 +36,12 @@ public class FileInfo implements Serializable {
     private LocalDateTime lastModified;
 
 
-
     public FileInfo(Path path) {
         try {
             this.filename = path.getFileName().toString();
             this.stringPath = path.toFile().getPath();
             this.size = Files.isDirectory(path) ? -1L : Files.size(path);
-            this.stringSize = formatItemSize (size);
+            this.stringSize = formatItemSize(size);
             this.type = Files.isDirectory(path) ? FileType.DIRECTORY : FileType.FILE;
             this.lastModified = LocalDateTime.ofInstant(Files.getLastModifiedTime(path).toInstant(), ZoneOffset.ofHours(0));
 
@@ -51,7 +50,7 @@ public class FileInfo implements Serializable {
         }
     }
 
-    public void writeSuccessor(){
+    public void writeSuccessor() {
         if (type == FileType.DIRECTORY) {
             try {
                 this.successor.addAll(Files.list(Paths.get(stringPath)).map(FileInfo::new).collect(Collectors.toList()));

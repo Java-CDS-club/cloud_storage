@@ -17,7 +17,7 @@ public class GiveFilesServerCommand implements ServerCommandService {
         Path userPath = Paths.get(command.getContext());
         FileInfo fileInfo = new FileInfo(userPath);
         fileInfo.writeSuccessor();
-        return new Command(TypeCommand.NEW_CLOUD_TABLE, command.getContext(),fileInfo);
+        return new Command(TypeCommand.NEW_CLOUD_TABLE, command.getContext(), fileInfo);
     }
 
     @Override

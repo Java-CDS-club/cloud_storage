@@ -6,7 +6,7 @@ import ru.geekbrains.oskin_di.command.Command;
 import ru.geekbrains.oskin_di.service.Callback;
 
 
-public class CommandInboundHandler extends SimpleChannelInboundHandler<Command>{
+public class CommandInboundHandler extends SimpleChannelInboundHandler<Command> {
 
     private Callback resultCommand;
 
