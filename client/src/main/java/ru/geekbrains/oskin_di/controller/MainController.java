@@ -36,25 +36,25 @@ public class MainController implements Initializable {
     private static NetworkService networkService = MainWindow.getNetworkService();
 
     @FXML
-    AnchorPane window;
+    private AnchorPane window;
 
     @FXML
-    TableView<FileInfo> tableLocal;
+    private TableView<FileInfo> tableLocal;
 
     @FXML
-    TableView<FileInfo> tableCloud;
+    private TableView<FileInfo> tableCloud;
 
     @FXML
-    ComboBox<String> disksBox;
+    private ComboBox<String> disksBox;
 
     @FXML
-    ComboBox<String> cloudBox;
+    private ComboBox<String> cloudBox;
 
     @FXML
-    TextField pathLocalField;
+    private TextField pathLocalField;
 
     @FXML
-    TextField pathCloudField;
+    private TextField pathCloudField;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
