@@ -9,11 +9,6 @@ import ru.geekbrains.oskin_di.service.NetworkService;
 
 public class MainWindow {
 
-    private static String cloudPath;
-
-    private static NetworkService networkService;
-
-
     public void start(Stage primaryStage) throws Exception {
 
         FXMLLoader loader = new FXMLLoader();
@@ -25,21 +20,5 @@ public class MainWindow {
         primaryStage.show();
         primaryStage.setResizable(false);
 
-    }
-
-    public static String getCloudPath() {
-        return cloudPath;
-    }
-
-    public static void setCloudPath(String cloudPath) {
-        MainWindow.cloudPath = cloudPath;
-    }
-
-    public static NetworkService getNetworkService() {
-        return networkService;
-    }
-
-    public static void setNetworkService(NetworkService networkService) {
-        MainWindow.networkService = networkService;
     }
 }

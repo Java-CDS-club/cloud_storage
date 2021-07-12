@@ -17,7 +17,7 @@ public class Factory {
     }
 
     public static PipelineEditor getPipelineEditor() {
-        return PipelineEditorImpl.getInstance ();
+        return PipelineEditorImpl.getInstance();
     }
 
 }

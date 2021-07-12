@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.socket.SocketChannel;
+import lombok.extern.log4j.Log4j2;
 import ru.geekbrains.oskin_di.FileInfo;
 import ru.geekbrains.oskin_di.command.Command;
 import ru.geekbrains.oskin_di.command.TypeCommand;
@@ -17,6 +18,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+@Log4j2
 public class FilesWriteHandler extends ChannelInboundHandlerAdapter {
 
     private final SocketChannel channel;
@@ -34,15 +36,14 @@ public class FilesWriteHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext channelHandlerContext, Object chunkedFile) throws Exception {
 
-        PipelineEditor pipelineEditor = Factory.getPipelineEditor ();
+        PipelineEditor pipelineEditor = Factory.getPipelineEditor();
 
         ByteBuf byteBuf = (ByteBuf) chunkedFile;
 
-        writeChunkFile (byteBuf);
+        writeChunkFile(byteBuf);
 
 
-
-        if (Files.size(Paths.get(fileInfo.getFuturePath ())) == fileInfo.getSize ()){
+        if (Files.size(Paths.get(fileInfo.getFuturePath())) == fileInfo.getSize()) {
             resultCallback.callback(new Command(TypeCommand.LOADING_END));
             pipelineEditor.clear(channel);
             pipelineEditor.switchToCommand(channelHandlerContext);
@@ -50,12 +51,12 @@ public class FilesWriteHandler extends ChannelInboundHandlerAdapter {
     }
 
     private void writeChunkFile(ByteBuf byteBuf) {
-        try (OutputStream os = new BufferedOutputStream(new FileOutputStream(fileInfo.getFuturePath (), true))) {
+        try (OutputStream os = new BufferedOutputStream(new FileOutputStream(fileInfo.getFuturePath(), true))) {
             while (byteBuf.isReadable()) {
                 os.write(byteBuf.readByte());
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error("Невозможно загрузить файл");
         } finally {
             byteBuf.release();
         }

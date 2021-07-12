@@ -10,6 +10,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 import ru.geekbrains.oskin_di.MainWindow;
 import ru.geekbrains.oskin_di.command.TypeCommand;
 import ru.geekbrains.oskin_di.factory.Factory;
@@ -21,24 +23,27 @@ import ru.geekbrains.oskin_di.command.Command;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+@Log4j2
 public class LoginController implements Initializable {
-
+    @Getter
     private static NetworkService networkService;
+    @Getter
+    private static String cloudPath;
 
     @FXML
-    TextField loginField;
+    private TextField loginField;
 
     @FXML
-    PasswordField passField;
+    private PasswordField passField;
 
     @FXML
-    Button entrance;
+    private Button entrance;
 
     @FXML
-    Button registration;
+    private Button registration;
 
     @FXML
-    Label statusLabel;
+    private Label statusLabel;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -63,15 +68,18 @@ public class LoginController implements Initializable {
     }
 
     private void openMainWindow(ActionEvent actionEvent, Command command) {
+        cloudPath = command.getContext();
         ((Node) (actionEvent.getSource())).getScene().getWindow().hide();
         Stage stage = new Stage();
         MainWindow mainWindow = new MainWindow();
-        MainWindow.setCloudPath(command.getContext());
-        MainWindow.setNetworkService(networkService);
+        startMainWindow(mainWindow, stage);
+    }
+
+    private void startMainWindow(MainWindow mainWindow, Stage stage) {
         try {
             mainWindow.start(stage);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Невозможно создать новое окно");
         }
     }
 
@@ -86,9 +94,5 @@ public class LoginController implements Initializable {
                 }
             });
         });
-    }
-
-    public static NetworkService getNetworkService() {
-        return networkService;
     }
 }

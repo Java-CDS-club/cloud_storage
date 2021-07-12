@@ -1,14 +1,19 @@
 package ru.geekbrains.oskin_di.util;
 
-import java.io.FileInputStream;
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+@Log4j2
 public class Config {
 
+    @Getter
     private static int port;
 
+    @Getter
     private static String address;
 
     public static void considerProperties() {
@@ -20,16 +25,7 @@ public class Config {
             address = properties.getProperty("address");
 
         } catch (IOException ioException) {
-            System.out.println("Ошибка в программе: файл настроек не обнаружен");
-            ioException.printStackTrace();
+            log.error("Файл с настройками не обнаружен");
         }
-    }
-
-    public static int getPort() {
-        return port;
-    }
-
-    public static String getAddress() {
-        return address;
     }
 }

@@ -28,16 +28,16 @@ public class Factory {
     }
 
     public static PipelineEditor getPipelineEditor() {
-        return PipelineEditorImpl.getInstance ();
+        return PipelineEditorImpl.getInstance();
     }
 
     public static List<ServerCommandService> getCommandServices() {
         return Arrays.asList(
-//                new AuthorizationServerCommand(),
-//                new RegistrationServerCommand(),
+                new AuthorizationServerCommand(),
+                new RegistrationServerCommand(),
                 new GiveFilesServerCommand(),
                 new UnloadingServerCommand(),
                 new LoadingServerCommand(),
-                new DeleteServerCommand ());
+                new DeleteServerCommand());
     }
 }

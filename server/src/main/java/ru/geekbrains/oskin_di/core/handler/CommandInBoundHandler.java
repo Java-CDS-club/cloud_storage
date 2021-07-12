@@ -19,7 +19,7 @@ public class CommandInBoundHandler extends SimpleChannelInboundHandler<Command> 
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, Command command) throws Exception {
 
         CommandDictionaryService commandDictionaryService = Factory.getCommandDirectoryService();
-        PipelineEditor pipelineEditor = Factory.getPipelineEditor ();
+        PipelineEditor pipelineEditor = Factory.getPipelineEditor();
 
         if (command.getTypeCommand() == TypeCommand.UPDATE_CLOUD_TABLE) {
             Command resultCommand = commandDictionaryService.processCommand(command);
@@ -28,9 +28,9 @@ public class CommandInBoundHandler extends SimpleChannelInboundHandler<Command> 
 
         if (command.getTypeCommand() == TypeCommand.UNLOADING) {
             Command resultCommand = commandDictionaryService.processCommand(command);
-            channelHandlerContext.writeAndFlush (resultCommand);
-            pipelineEditor.clear (channelHandlerContext);
-            pipelineEditor.switchToFileUpload (channelHandlerContext,command.getFileInfo());
+            channelHandlerContext.writeAndFlush(resultCommand);
+            pipelineEditor.clear(channelHandlerContext);
+            pipelineEditor.switchToFileUpload(channelHandlerContext, command.getFileInfo());
         }
 
         if (command.getTypeCommand() == TypeCommand.LOADING) {
@@ -43,7 +43,7 @@ public class CommandInBoundHandler extends SimpleChannelInboundHandler<Command> 
             channelHandlerContext.channel().writeAndFlush(chunkedFile);
         }
 
-        if (command.getTypeCommand () == TypeCommand.DELETION) {
+        if (command.getTypeCommand() == TypeCommand.DELETION) {
             Command resultCommand = commandDictionaryService.processCommand(command);
             channelHandlerContext.writeAndFlush(resultCommand);
         }

@@ -1,6 +1,6 @@
 package ru.geekbrains.oskin_di.database;
 
-import ru.geekbrains.oskin_di.factory.Factory;
+import lombok.extern.log4j.Log4j2;
 import ru.geekbrains.oskin_di.util.Config;
 
 import java.sql.Connection;
@@ -8,11 +8,12 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+@Log4j2
 public class DBConnection {
 
-    private static final String DB_URL = Config.getDb_url();
-    private static final String USER = Config.getDb_login();
-    private static final String PASSWORD = Config.getDb_password();
+    private static final String URL = Config.getDbUrl();
+    private static final String USER = Config.getDbLogin();
+    private static final String PASSWORD = Config.getDbPassword();
 
     private final Connection connection;
     private final Statement stmt;
@@ -23,12 +24,13 @@ public class DBConnection {
 
     public DBConnection() {
         try {
-            Class.forName(Config.getDb_driver());
-            this.connection = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+            Class.forName(Config.getDbDriver());
+            this.connection = DriverManager.getConnection(URL, USER, PASSWORD);
             this.stmt = connection.createStatement();
-            System.out.println("Успешно подключены к БД");
+            log.info("Успешно подключились к базе данных");
         } catch (ClassNotFoundException | SQLException e) {
-            throw new RuntimeException("Невозможно подключиться к базе данных");
+            log.error("Невозможно подключиться к базе данных");
+            throw new RuntimeException();
         }
     }
 
@@ -47,6 +49,7 @@ public class DBConnection {
                 e.printStackTrace();
             }
         }
+        log.info("Отключились от базы данных");
     }
 
 }

@@ -7,7 +7,7 @@ public class Migration {
 
     public static void start() {
         Flyway flyway = Flyway.configure()
-                .dataSource(Config.getDb_url(), Config.getDb_login(), Config.getDb_password())
+                .dataSource(Config.getDbUrl(), Config.getDbLogin(), Config.getDbPassword())
                 .load();
         flyway.migrate();
     }

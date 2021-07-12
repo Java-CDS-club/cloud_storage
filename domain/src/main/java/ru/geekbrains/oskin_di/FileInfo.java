@@ -1,16 +1,25 @@
 package ru.geekbrains.oskin_di;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.CharacterIterator;
+import java.text.StringCharacterIterator;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Getter
+@Setter
+@Log4j2
 public class FileInfo implements Serializable {
 
     private List<FileInfo> successor = new ArrayList<>();
@@ -22,14 +31,6 @@ public class FileInfo implements Serializable {
     private LocalDateTime lastModified;
     private String futurePath;
 
-    public String getFuturePath() {
-        return futurePath;
-    }
-
-    public void setFuturePath(String futurePath) {
-        this.futurePath = futurePath;
-    }
-
     public FileInfo(Path path) {
         try {
             this.filename = path.getFileName().toString();
@@ -40,7 +41,7 @@ public class FileInfo implements Serializable {
             this.lastModified = LocalDateTime.ofInstant(Files.getLastModifiedTime(path).toInstant(), ZoneOffset.ofHours(0));
 
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Нельзя получить информацию о файле");
         }
     }
 
@@ -49,100 +50,21 @@ public class FileInfo implements Serializable {
             try {
                 this.successor.addAll(Files.list(Paths.get(stringPath)).map(FileInfo::new).collect(Collectors.toList()));
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("Нельзя получить вложенный файлы");
             }
         }
     }
 
-    private String formatItemSize(Long item) {
-
-        if (item == -1L) {
-            return "";
+    private String formatItemSize(long bytes) {
+        if (-1000 < bytes && bytes < 1000) {
+            return bytes + " B";
         }
-        StringBuilder format = new StringBuilder();
-        if (item >= 1048576) {
-            format.append(item / 1048576);
-            format.append(" MB");
-            return format.toString();
-        } else if (item >= 1024) {
-            format.append(item / 1024);
-            format.append(" KB");
-            return format.toString();
-        } else if (item > 0) {
-            format.append("1 KB");
-            return format.toString();
-        } else {
-            return "0 KB";
+        CharacterIterator characterIterator = new StringCharacterIterator("kMGTPE");
+        while (bytes <= -999_950 || bytes >= 999_950) {
+            bytes /= 1000;
+            characterIterator.next();
         }
-    }
-
-    public List<FileInfo> getSuccessor() {
-        return successor;
-    }
-
-    public void setSuccessor(List<FileInfo> successor) {
-        this.successor = successor;
-    }
-
-    public String getFilename() {
-        return filename;
-    }
-
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
-
-    public String getStringPath() {
-        return stringPath;
-    }
-
-    public void setStringPath(String stringPath) {
-        this.stringPath = stringPath;
-    }
-
-    public FileType getType() {
-        return type;
-    }
-
-    public void setType(FileType type) {
-        this.type = type;
-    }
-
-    public long getSize() {
-        return size;
-    }
-
-    public void setSize(long size) {
-        this.size = size;
-    }
-
-    public LocalDateTime getLastModified() {
-        return lastModified;
-    }
-
-    public void setLastModified(LocalDateTime lastModified) {
-        this.lastModified = lastModified;
-    }
-
-    public String getStringSize() {
-        return stringSize;
-    }
-
-    public void setStringSize(String stringSize) {
-        this.stringSize = stringSize;
-    }
-
-    @Override
-    public String toString() {
-        return "FileInfo{" +
-                "successor=" + successor +
-                ", filename='" + filename + '\'' +
-                ", stringPath='" + stringPath + '\'' +
-                ", type=" + type +
-                ", size=" + size +
-                ", stringSize='" + stringSize + '\'' +
-                ", lastModified=" + lastModified +
-                ", futurePath='" + futurePath + '\'' +
-                '}';
+        return String.format("%.1f %cB", bytes / 1000.0, characterIterator.current());
     }
 }
+

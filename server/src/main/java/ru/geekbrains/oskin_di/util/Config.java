@@ -1,57 +1,46 @@
 package ru.geekbrains.oskin_di.util;
 
 
-import java.io.FileInputStream;
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
+
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+@Log4j2
 public class Config {
-
-    private static String db_url;
-
+    @Getter
+    private static String dbUrl;
+    @Getter
     private static int port;
-
-    private static String db_login;
-
-    private static String db_password;
-
-    private static String db_driver;
+    @Getter
+    private static String dbLogin;
+    @Getter
+    private static String dbPassword;
+    @Getter
+    private static String dbDriver;
+    @Getter
+    private static String cloudPath;
+    @Getter
+    private static String cloudPathPrefix;
 
     public static void considerProperties() {
         try (InputStream propertyInputStream = Config.class.getResourceAsStream("/properties/Server.properties")) {
             Properties properties = new Properties();
             properties.load(propertyInputStream);
 
-            db_url = properties.getProperty("db_url");
+            dbUrl = properties.getProperty("db_url");
             port = Integer.parseInt(properties.getProperty("port"));
-            db_login = properties.getProperty("db_login");
-            db_password = properties.getProperty("db_password");
-            db_driver = properties.getProperty("db_driver");
+            dbLogin = properties.getProperty("db_login");
+            dbPassword = properties.getProperty("db_password");
+            dbDriver = properties.getProperty("db_driver");
+            cloudPath = properties.getProperty("cloud_path");
+            cloudPathPrefix = properties.getProperty("cloud_path_prefix");
 
         } catch (IOException ioException) {
-            System.out.println("Ошибка в программе: файл настроек не обнаружен");
-            ioException.printStackTrace();
+            log.error("Файл с настройками не найден");
         }
-    }
-
-    public static String getDb_url() {
-        return db_url;
-    }
-
-    public static int getPort() {
-        return port;
-    }
-
-    public static String getDb_login() {
-        return db_login;
-    }
-
-    public static String getDb_password() {
-        return db_password;
-    }
-
-    public static String getDb_driver() {
-        return db_driver;
     }
 }

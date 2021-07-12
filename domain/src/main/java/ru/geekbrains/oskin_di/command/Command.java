@@ -1,9 +1,13 @@
 package ru.geekbrains.oskin_di.command;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.geekbrains.oskin_di.FileInfo;
 
 import java.io.Serializable;
 
+@Getter
+@Setter
 public class Command implements Serializable {
 
     private TypeCommand typeCommand;
@@ -27,33 +31,12 @@ public class Command implements Serializable {
         this.fileInfo = fileInfo;
     }
 
-    public String getContext() {
-        return context;
-    }
-
-    public void setFileInfo(FileInfo fileInfo) {
-        this.fileInfo = fileInfo;
-    }
-
-    public void setContext(String context) {
-        this.context = context;
-    }
 
     public Command(TypeCommand typeCommand, FileInfo fileInfo) {
         this.typeCommand = typeCommand;
         this.fileInfo = fileInfo;
     }
 
-    public TypeCommand getTypeCommand() {
-        return typeCommand;
-    }
 
-    public void setTypeCommand(TypeCommand typeCommand) {
-        this.typeCommand = typeCommand;
-    }
-
-    public FileInfo getFileInfo() {
-        return fileInfo;
-    }
 }
 

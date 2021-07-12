@@ -10,9 +10,11 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
+import lombok.extern.log4j.Log4j2;
 import ru.geekbrains.oskin_di.core.handler.AuthenticationInboundHandler;
 import ru.geekbrains.oskin_di.util.Config;
 
+@Log4j2
 public class NettyServer {
 
     private static NettyServer instance;
@@ -45,11 +47,11 @@ public class NettyServer {
 
         try {
             ChannelFuture future = bootstrap.bind(Config.getPort()).sync();
-            System.out.println("Сервер запущен на порту " + Config.getPort());
+            log.info("Сервер запущен на порту " + Config.getPort());
             future.channel().closeFuture().sync();
-            System.out.println("Сервер завершил работу");
+            log.info("Сервер завершил работу");
         } catch (InterruptedException e) {
-            System.out.println("Сервер упал");
+            log.error("Сервер упал");
         } finally {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();

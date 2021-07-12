@@ -14,8 +14,15 @@ public class RegistrationServerCommand implements ServerCommandService {
     @Override
     public Command processCommand(Command command) {
 
-        String login = command.getContext().split("_", 2)[0];
-        String password = command.getContext().split("_", 2)[0];
+        String[] value = command.getContext().split("_");
+        String login = null;
+        String password = null;
+        if (value.length == 2) {
+            login = value[0];
+            password = value[1];
+        } else {
+            return new Command(TypeCommand.INCORRECT_LOGIN_OR_PASSWORD);
+        }
 
         if (authenticationProvided.addClient(login, password)) {
             return new Command(TypeCommand.REGISTRATION_SUCCESSFULLY);

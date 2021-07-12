@@ -1,13 +1,14 @@
 package ru.geekbrains.oskin_di.database.impl;
 
-import ru.geekbrains.oskin_di.core.NettyServer;
+import lombok.extern.log4j.Log4j2;
 import ru.geekbrains.oskin_di.database.AuthenticationProvided;
 import ru.geekbrains.oskin_di.database.DBConnection;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
-
+@Log4j2
 public class DBAuthenticationProvided implements AuthenticationProvided {
 
     private DBConnection dbConnection;
@@ -33,13 +34,14 @@ public class DBAuthenticationProvided implements AuthenticationProvided {
     @Override
     public boolean isCorrect(String login, String password) {
         String query = String.format("select id from clients where login = '%s' and password = '%s';", login, password);
-        try (ResultSet rs = dbConnection.getStmt().executeQuery(query)) {
+        try (Statement stmt = dbConnection.getStmt();
+             ResultSet rs = stmt.executeQuery(query)) {
             if (rs.next()) {
-                System.out.println("Успешно вошел пользователь" + login);
+                log.info("Успешно вошел пользователь" + login);
                 return true;
             }
         } catch (SQLException e) {
-            new SQLException();
+            log.error("Ошибка в запросе к базе данных");
         }
         return false;
     }
@@ -48,12 +50,14 @@ public class DBAuthenticationProvided implements AuthenticationProvided {
     @Override
     public boolean isLoginBusy(String login) {
         String query = String.format("select id from clients where login = '%s';", login);
-        try (ResultSet rs = dbConnection.getStmt().executeQuery(query)) {
+        try (Statement stmt = dbConnection.getStmt();
+             ResultSet rs = stmt.executeQuery(query)) {
             if (rs.next()) {
+                log.info("Клиент " + login + " есть в базе");
                 return true;
             }
         } catch (SQLException e) {
-            new SQLException();
+            log.error("Ошибка в запросе к базе данных");
         }
         return false;
     }
@@ -64,11 +68,12 @@ public class DBAuthenticationProvided implements AuthenticationProvided {
             return false;
         }
         String query = String.format("insert into clients (login, password) VALUES ('%S', '%S');", login, password);
-        try {
-            dbConnection.getStmt().executeUpdate(query);
-            System.out.println("Успешно добавлен клиент" + login);
+        try (Statement stmt = dbConnection.getStmt()) {
+            stmt.executeUpdate(query);
+            log.info("Успешно добавлен клиент " + login);
             return true;
         } catch (SQLException e) {
+            log.error("Ошибка в запросе к базе данных");
             return false;
         }
     }

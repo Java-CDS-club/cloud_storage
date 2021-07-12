@@ -1,5 +1,6 @@
 package ru.geekbrains.oskin_di.service.impl.server_command;
 
+import lombok.extern.log4j.Log4j2;
 import ru.geekbrains.oskin_di.command.Command;
 import ru.geekbrains.oskin_di.command.TypeCommand;
 import ru.geekbrains.oskin_di.service.ServerCommandService;
@@ -9,13 +10,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+@Log4j2
 public class DeleteServerCommand implements ServerCommandService {
 
     @Override
     public Command processCommand(Command command) {
-        Path path = Paths.get(command.getFileInfo ().getStringPath ());
-        deleteFile (path);
-        return new Command (TypeCommand.DELETION_END);
+        Path path = Paths.get(command.getFileInfo().getStringPath());
+        deleteFile(path);
+        return new Command(TypeCommand.DELETION_END);
     }
 
     @Override
@@ -23,11 +25,11 @@ public class DeleteServerCommand implements ServerCommandService {
         return TypeCommand.DELETION;
     }
 
-    private void deleteFile(Path path){
+    private void deleteFile(Path path) {
         try {
-            Files.delete (path);
+            Files.delete(path);
         } catch (IOException e) {
-            e.printStackTrace ();
+            log.error("Невозможно удалить файл");
         }
     }
 }

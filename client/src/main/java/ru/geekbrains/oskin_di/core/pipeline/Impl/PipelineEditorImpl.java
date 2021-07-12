@@ -19,7 +19,7 @@ public class PipelineEditorImpl implements PipelineEditor {
 
     public static PipelineEditorImpl getInstance() {
         if (instance == null) {
-            instance = new PipelineEditorImpl ();
+            instance = new PipelineEditorImpl();
         }
         return instance;
     }
@@ -54,7 +54,7 @@ public class PipelineEditorImpl implements PipelineEditor {
             pipeline.addLast(new ObjectEncoder());
         }
         if (pipeline.get(CommandInboundHandler.class) == null) {
-            pipeline.addLast(new CommandInboundHandler ());
+            pipeline.addLast(new CommandInboundHandler());
         }
         if (pipeline.get(ChunkedWriteHandler.class) == null) {
             pipeline.addLast(new ChunkedWriteHandler());

@@ -1,5 +1,7 @@
 package ru.geekbrains.oskin_di.command;
 
+import lombok.Getter;
+
 import java.io.Serializable;
 
 public enum TypeCommand implements Serializable {
@@ -22,20 +24,11 @@ public enum TypeCommand implements Serializable {
     DELETION_END("Удаление закончено"),
     INVALID_COMMAND("Некорректная команда");
 
+    @Getter
     private String info;
 
     TypeCommand(String info) {
         this.info = info;
     }
 
-    public String getInfo() {
-        return info;
-    }
-
-    @Override
-    public String toString() {
-        return "TypeCommand{" +
-                "info='" + info + '\'' +
-                '}';
-    }
 }

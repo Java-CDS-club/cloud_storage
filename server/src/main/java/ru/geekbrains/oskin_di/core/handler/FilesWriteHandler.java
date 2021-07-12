@@ -32,21 +32,21 @@ public class FilesWriteHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext channelHandlerContext, Object chunkedFile) throws Exception {
 
-        PipelineEditor pipelineEditor = Factory.getPipelineEditor ();
+        PipelineEditor pipelineEditor = Factory.getPipelineEditor();
 
         ByteBuf byteBuf = (ByteBuf) chunkedFile;
 
-        writeChunkFile (byteBuf);
+        writeChunkFile(byteBuf);
 
-        if (Files.size(Paths.get(fileInfo.getFuturePath ())) == fileInfo.getSize ()){
+        if (Files.size(Paths.get(fileInfo.getFuturePath())) == fileInfo.getSize()) {
             channelHandlerContext.writeAndFlush(new Command(TypeCommand.UNLOADING_END));
-            pipelineEditor.clear (channelHandlerContext);
-            pipelineEditor.switchToCommand (channelHandlerContext);
+            pipelineEditor.clear(channelHandlerContext);
+            pipelineEditor.switchToCommand(channelHandlerContext);
         }
     }
 
     private void writeChunkFile(ByteBuf byteBuf) {
-        try (OutputStream os = new BufferedOutputStream(new FileOutputStream(fileInfo.getFuturePath (), true))) {
+        try (OutputStream os = new BufferedOutputStream(new FileOutputStream(fileInfo.getFuturePath(), true))) {
             while (byteBuf.isReadable()) {
                 os.write(byteBuf.readByte());
             }
