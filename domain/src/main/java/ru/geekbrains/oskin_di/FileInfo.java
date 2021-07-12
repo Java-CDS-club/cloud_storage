@@ -13,20 +13,6 @@ import java.util.stream.Collectors;
 
 public class FileInfo implements Serializable {
 
-    public enum FileType {
-        FILE("Файл"), DIRECTORY("Папка с файлами");
-
-        private String name;
-
-        public String getName() {
-            return name;
-        }
-
-        FileType(String name) {
-            this.name = name;
-        }
-    }
-
     private List<FileInfo> successor = new ArrayList<>();
     private String filename;
     private String stringPath;
@@ -34,7 +20,15 @@ public class FileInfo implements Serializable {
     private long size;
     private String stringSize;
     private LocalDateTime lastModified;
+    private String futurePath;
 
+    public String getFuturePath() {
+        return futurePath;
+    }
+
+    public void setFuturePath(String futurePath) {
+        this.futurePath = futurePath;
+    }
 
     public FileInfo(Path path) {
         try {
@@ -148,6 +142,7 @@ public class FileInfo implements Serializable {
                 ", size=" + size +
                 ", stringSize='" + stringSize + '\'' +
                 ", lastModified=" + lastModified +
+                ", futurePath='" + futurePath + '\'' +
                 '}';
     }
 }

@@ -7,7 +7,7 @@ import ru.geekbrains.oskin_di.util.Config;
 public class Main {
     public static void main(String[] args) {
         Config.considerProperties();
-        Migration.start();
+//        Migration.start();
         Factory.getNettyServer().startServer();
     }
 }

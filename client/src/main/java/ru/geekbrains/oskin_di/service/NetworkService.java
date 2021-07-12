@@ -8,6 +8,8 @@ public interface NetworkService {
 
     void unloadFile(Command command, Callback callback);
 
+    void loadFile(Command command, Callback callback);
+
     void openConnection();
 
     void closeConnection();

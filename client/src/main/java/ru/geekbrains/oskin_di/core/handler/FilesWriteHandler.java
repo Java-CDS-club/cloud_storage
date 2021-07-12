@@ -3,15 +3,13 @@ package ru.geekbrains.oskin_di.core.handler;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.handler.codec.serialization.ClassResolvers;
-import io.netty.handler.codec.serialization.ObjectDecoder;
-import io.netty.handler.codec.serialization.ObjectEncoder;
-import io.netty.handler.stream.ChunkedWriteHandler;
+import io.netty.channel.socket.SocketChannel;
 import ru.geekbrains.oskin_di.FileInfo;
 import ru.geekbrains.oskin_di.command.Command;
 import ru.geekbrains.oskin_di.command.TypeCommand;
 import ru.geekbrains.oskin_di.core.pipeline.PipelineEditor;
 import ru.geekbrains.oskin_di.factory.Factory;
+import ru.geekbrains.oskin_di.service.Callback;
 
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
@@ -21,11 +19,15 @@ import java.nio.file.Paths;
 
 public class FilesWriteHandler extends ChannelInboundHandlerAdapter {
 
-    private FileInfo fileInfo;
+    private final SocketChannel channel;
+    private final FileInfo fileInfo;
+    private final Callback resultCallback;
 
 
-    public FilesWriteHandler(FileInfo fileInfo) {
+    public FilesWriteHandler(SocketChannel channel, FileInfo fileInfo, Callback callback) {
+        this.channel = channel;
         this.fileInfo = fileInfo;
+        this.resultCallback = callback;
 
     }
 
@@ -38,10 +40,12 @@ public class FilesWriteHandler extends ChannelInboundHandlerAdapter {
 
         writeChunkFile (byteBuf);
 
+
+
         if (Files.size(Paths.get(fileInfo.getFuturePath ())) == fileInfo.getSize ()){
-            channelHandlerContext.writeAndFlush(new Command(TypeCommand.UNLOADING_END));
-            pipelineEditor.clear (channelHandlerContext);
-            pipelineEditor.switchToCommand (channelHandlerContext);
+            resultCallback.callback(new Command(TypeCommand.LOADING_END));
+            pipelineEditor.clear(channel);
+            pipelineEditor.switchToCommand(channelHandlerContext);
         }
     }
 

@@ -18,6 +18,8 @@ public enum TypeCommand implements Serializable {
     UNLOADING("Выгрузка файла"),
     UNLOADING_START("К выгрузке готов"),
     UNLOADING_END("Выгрузка закончена"),
+    DELETION("Удалить файл"),
+    DELETION_END("Удаление закончено"),
     INVALID_COMMAND("Некорректная команда");
 
     private String info;

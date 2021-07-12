@@ -1,6 +1,8 @@
 package ru.geekbrains.oskin_di.factory;
 
 import ru.geekbrains.oskin_di.core.NettyServer;
+import ru.geekbrains.oskin_di.core.pipeline.PipelineEditor;
+import ru.geekbrains.oskin_di.core.pipeline.impl.PipelineEditorImpl;
 import ru.geekbrains.oskin_di.database.AuthenticationProvided;
 import ru.geekbrains.oskin_di.database.impl.DBAuthenticationProvided;
 import ru.geekbrains.oskin_di.service.CommandDictionaryService;
@@ -25,12 +27,17 @@ public class Factory {
         return new CommandDictionaryServiceImpl();
     }
 
+    public static PipelineEditor getPipelineEditor() {
+        return PipelineEditorImpl.getInstance ();
+    }
+
     public static List<ServerCommandService> getCommandServices() {
         return Arrays.asList(
-                new AuthorizationServerCommand(),
-                new RegistrationServerCommand(),
+//                new AuthorizationServerCommand(),
+//                new RegistrationServerCommand(),
                 new GiveFilesServerCommand(),
                 new UnloadingServerCommand(),
-                new LoadingServerCommand());
+                new LoadingServerCommand(),
+                new DeleteServerCommand ());
     }
 }

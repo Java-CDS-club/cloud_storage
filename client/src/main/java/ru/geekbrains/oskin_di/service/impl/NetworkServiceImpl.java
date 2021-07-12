@@ -30,6 +30,11 @@ public class NetworkServiceImpl implements NetworkService {
     }
 
     @Override
+    public void loadFile(Command command, Callback callback) {
+        client.loadingFile(command, callback);
+    }
+
+    @Override
     public void openConnection() {
         client.startClient();
     }
